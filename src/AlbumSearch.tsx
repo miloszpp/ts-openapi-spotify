@@ -6,10 +6,8 @@ import {
   AsyncResult,
   asAsyncSuccess,
 } from "./AsyncResult";
+import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from "./secrets";
 import { components, paths } from "./spotify";
-
-const SPOTIFY_CLIENT_ID = "34e7fa5ea9f342fc8f84bcc51f5ff468";
-const SPOTIFY_CLIENT_SECRET = "aee9818697384cb7b1d51afe837bd7dc";
 
 const getSpotifyToken = async (): Promise<string> => {
   const response = await axios.post(
@@ -28,6 +26,7 @@ const getAuthHeaders = (token: string) => ({
 
 const searchAlbums = async (token: string, query: string) =>
   await axios.get<
+    // SuccessResponse<paths["/search"]["get"]["responses"]>["application/json"]
     paths["/search"]["get"]["responses"]["200"]["content"]["application/json"]
   >("https://api.spotify.com/v1/search", {
     params: {
