@@ -1,4 +1,3 @@
-import axios from "axios";
 import { createRef, useEffect, useState } from "react";
 import {
   ASYNC_EMPTY,
@@ -6,50 +5,16 @@ import {
   AsyncResult,
   asAsyncSuccess,
 } from "./AsyncResult";
-import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from "./secrets";
-import { components, paths } from "./spotify";
-
-const getSpotifyToken = async (): Promise<string> => {
-  const response = await axios.post(
-    "https://accounts.spotify.com/api/token",
-    `grant_type=client_credentials&client_id=${SPOTIFY_CLIENT_ID}&client_secret=${SPOTIFY_CLIENT_SECRET}`,
-    {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    }
-  );
-  return response.data.access_token;
-};
-
-const getAuthHeaders = (token: string) => ({
-  headers: { Authorization: `Bearer ${token}` },
-});
-
-const searchAlbums = async (token: string, query: string) =>
-  await axios.get<
-    // SuccessResponse<paths["/search"]["get"]["responses"]>["application/json"]
-    paths["/search"]["get"]["responses"]["200"]["content"]["application/json"]
-  >("https://api.spotify.com/v1/search", {
-    params: {
-      q: query,
-      type: "album",
-    },
-    ...getAuthHeaders(token),
-  });
-
-const getAlbum = async (token: string, id: string) =>
-  await axios.get<
-    paths["/albums/{id}"]["get"]["responses"]["200"]["content"]["application/json"]
-  >(`https://api.spotify.com/v1/albums/${id}`, getAuthHeaders(token));
+import { getAlbum, getSpotifyToken, searchAlbums } from "./api";
+import { convertAlbumDetails, convertAlbumSearchResponse } from "./conversion";
+import { Album, AlbumDetails } from "./domain";
 
 export const AlbumSearch = () => {
   const [token, setToken] = useState<AsyncResult<string>>(ASYNC_IN_PROGRESS);
   const queryInputRef = createRef<HTMLInputElement>();
-  const [albums, setAlbums] =
-    useState<AsyncResult<components["schemas"]["SimplifiedAlbumObject"][]>>(
-      ASYNC_EMPTY
-    );
+  const [albums, setAlbums] = useState<AsyncResult<Album[]>>(ASYNC_EMPTY);
   const [albumDetails, setAlbumDetails] =
-    useState<AsyncResult<components["schemas"]["AlbumObject"]>>(ASYNC_EMPTY);
+    useState<AsyncResult<AlbumDetails>>(ASYNC_EMPTY);
 
   useEffect(() => {
     getSpotifyToken().then((token) => setToken(asAsyncSuccess(token)));
@@ -65,7 +30,7 @@ export const AlbumSearch = () => {
       token.value,
       queryInputRef.current.value
     );
-    setAlbums(asAsyncSuccess(response.data.albums?.items ?? []));
+    setAlbums(asAsyncSuccess(convertAlbumSearchResponse(response.data)));
   };
 
   const handleGetDetails = async (id: string) => {
@@ -75,7 +40,7 @@ export const AlbumSearch = () => {
 
     setAlbumDetails(ASYNC_IN_PROGRESS);
     const response = await getAlbum(token.value, id);
-    setAlbumDetails(asAsyncSuccess(response.data));
+    setAlbumDetails(asAsyncSuccess(convertAlbumDetails(response.data)));
   };
 
   if (token.type === "inProgress") {
@@ -110,8 +75,8 @@ export const AlbumSearch = () => {
         {albumDetails.type === "success" && (
           <div>
             <h1>{albumDetails.value.name}</h1>
-            <h2>{albumDetails.value.artists?.[0].name}</h2>
-            <img src={albumDetails.value.images?.[0].url} />
+            <h2>{albumDetails.value.artist}</h2>
+            <img src={albumDetails.value.imagePath} />
           </div>
         )}
       </div>
