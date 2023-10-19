@@ -1,5 +1,9 @@
 import axios from "axios";
-import { AlbumDetailsResponseDto, AlbumSearchResponseDto } from "./dto";
+import {
+  AlbumDetailsResponseDto,
+  AlbumSearchResponseDto,
+  SaveAlbumsRequestDto,
+} from "./dto";
 import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from "./secrets";
 
 const getAuthHeaders = (token: string) => ({
@@ -31,3 +35,14 @@ export const getAlbum = async (token: string, id: string) =>
     `https://api.spotify.com/v1/albums/${id}`,
     getAuthHeaders(token)
   );
+
+export const saveAlbums = async (token: string, ids: string[]) => {
+  const request: SaveAlbumsRequestDto = {
+    ids,
+  };
+  return await axios.put<unknown>(
+    "https://api.spotify.com/v1/me/albums",
+    request,
+    getAuthHeaders(token)
+  );
+};

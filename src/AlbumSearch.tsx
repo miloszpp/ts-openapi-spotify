@@ -5,7 +5,7 @@ import {
   AsyncResult,
   asAsyncSuccess,
 } from "./AsyncResult";
-import { getAlbum, getSpotifyToken, searchAlbums } from "./api";
+import { getAlbum, getSpotifyToken, saveAlbums, searchAlbums } from "./api";
 import { convertAlbumDetails, convertAlbumSearchResponse } from "./conversion";
 import { Album, AlbumDetails } from "./domain";
 
@@ -43,6 +43,14 @@ export const AlbumSearch = () => {
     setAlbumDetails(asAsyncSuccess(convertAlbumDetails(response.data)));
   };
 
+  const handleSave = async (id: string) => {
+    if (token.type !== "success") {
+      return;
+    }
+
+    await saveAlbums(token.value, [id]);
+  };
+
   if (token.type === "inProgress") {
     return "Loading...";
   }
@@ -65,6 +73,7 @@ export const AlbumSearch = () => {
                 <button onClick={() => handleGetDetails(album.id)}>
                   Details
                 </button>
+                <button onClick={() => handleSave(album.id)}>Save</button>
               </li>
             ))}
           </ul>
