@@ -17,3 +17,10 @@ export type AlbumDetailsResponseDto =
 export type SaveAlbumsRequestDto = OperationRequestBodyContent<
   paths["/me/albums"]["put"]
 >;
+
+export type CurrentUserResponseDto =
+  paths["/me"]["get"]["responses"]["200"]["content"]["application/json"];
+
+export type CreatePlaylistDto = OperationRequestBodyContent<
+  paths["/users/{user_id}/playlists"]
+>;

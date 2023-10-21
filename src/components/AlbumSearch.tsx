@@ -1,59 +1,42 @@
-import { createRef, useEffect, useState } from "react";
+import { createRef, useContext, useState } from "react";
+import { getAlbum, searchAlbums } from "../services/api";
+import { TokenContext } from "../services/auth";
+import {
+  convertAlbumDetails,
+  convertAlbumSearchResponse,
+} from "../services/conversion";
+import { Album, AlbumDetails } from "../types/domain";
 import {
   ASYNC_EMPTY,
   ASYNC_IN_PROGRESS,
   AsyncResult,
   asAsyncSuccess,
-} from "./AsyncResult";
-import { getAlbum, getSpotifyToken, saveAlbums, searchAlbums } from "./api";
-import { convertAlbumDetails, convertAlbumSearchResponse } from "./conversion";
-import { Album, AlbumDetails } from "./domain";
+} from "../utils/AsyncResult";
 
 export const AlbumSearch = () => {
-  const [token, setToken] = useState<AsyncResult<string>>(ASYNC_IN_PROGRESS);
+  const token = useContext(TokenContext);
+
   const queryInputRef = createRef<HTMLInputElement>();
+
   const [albums, setAlbums] = useState<AsyncResult<Album[]>>(ASYNC_EMPTY);
   const [albumDetails, setAlbumDetails] =
     useState<AsyncResult<AlbumDetails>>(ASYNC_EMPTY);
 
-  useEffect(() => {
-    getSpotifyToken().then((token) => setToken(asAsyncSuccess(token)));
-  }, []);
-
   const handleSearch = async () => {
-    if (token.type !== "success" || !queryInputRef.current) {
+    if (!queryInputRef.current) {
       return;
     }
 
     setAlbums(ASYNC_IN_PROGRESS);
-    const response = await searchAlbums(
-      token.value,
-      queryInputRef.current.value
-    );
+    const response = await searchAlbums(token, queryInputRef.current.value);
     setAlbums(asAsyncSuccess(convertAlbumSearchResponse(response.data)));
   };
 
   const handleGetDetails = async (id: string) => {
-    if (token.type !== "success") {
-      return;
-    }
-
     setAlbumDetails(ASYNC_IN_PROGRESS);
-    const response = await getAlbum(token.value, id);
+    const response = await getAlbum(token, id);
     setAlbumDetails(asAsyncSuccess(convertAlbumDetails(response.data)));
   };
-
-  const handleSave = async (id: string) => {
-    if (token.type !== "success") {
-      return;
-    }
-
-    await saveAlbums(token.value, [id]);
-  };
-
-  if (token.type === "inProgress") {
-    return "Loading...";
-  }
 
   return (
     <div className="container">
@@ -73,7 +56,6 @@ export const AlbumSearch = () => {
                 <button onClick={() => handleGetDetails(album.id)}>
                   Details
                 </button>
-                <button onClick={() => handleSave(album.id)}>Save</button>
               </li>
             ))}
           </ul>

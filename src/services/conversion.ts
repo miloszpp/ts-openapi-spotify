@@ -1,5 +1,5 @@
-import { Album, AlbumDetails } from "./domain";
-import { AlbumDetailsResponseDto, AlbumSearchResponseDto } from "./dto";
+import { Album, AlbumDetails } from "../types/domain";
+import { AlbumDetailsResponseDto, AlbumSearchResponseDto } from "../types/dto";
 
 export const convertAlbumSearchResponse = (
   dto: AlbumSearchResponseDto
