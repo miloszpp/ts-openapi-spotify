@@ -1,31 +1,48 @@
-import { PropsWithChildren, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { TokenContext, requestToken } from "../services/auth";
+import { isAxiosError } from "axios";
+import React, { PropsWithChildren, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getCurrentUser } from "../services/api";
+import { convertCurrentUser } from "../services/conversion";
+import { CurrentUser } from "../types/domain";
+import {
+  ASYNC_EMPTY,
+  ASYNC_IN_PROGRESS,
+  AsyncResult,
+  asAsyncFailure,
+  asAsyncSuccess,
+} from "../utils/AsyncResult";
+
+export const CurrentUserContext = React.createContext<CurrentUser>({
+  id: "",
+  name: "",
+});
 
 export const Authorized: React.FC<PropsWithChildren> = ({ children }) => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get("code");
-  const [token, setToken] = useState<string | undefined>();
+  const [currentUser, setCurrentUser] =
+    useState<AsyncResult<CurrentUser>>(ASYNC_EMPTY);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (!code) {
-      return;
-    }
-    requestToken(code).then(setToken);
-  }, [code]);
+    setCurrentUser(ASYNC_IN_PROGRESS);
+    getCurrentUser().then(
+      (response) => {
+        setCurrentUser(asAsyncSuccess(convertCurrentUser(response.data)));
+      },
+      (error): void => {
+        if (isAxiosError(error) && error.status === 401) {
+          navigate("/login");
+        } else {
+          setCurrentUser(asAsyncFailure(error));
+        }
+      }
+    );
+  }, [navigate]);
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem("access_token");
-    if (accessToken) {
-      setToken(accessToken);
-    }
-  }, []);
-
-  return token ? (
-    <TokenContext.Provider value={token}>{children}</TokenContext.Provider>
+  return currentUser.type === "success" ? (
+    <CurrentUserContext.Provider value={currentUser.value}>
+      {children}
+    </CurrentUserContext.Provider>
   ) : (
-    <span>
-      Unauthorized, please <Link to="/login">log in</Link>.
-    </span>
+    <span>Loading...</span>
   );
 };

@@ -9,3 +9,13 @@ export interface AlbumDetails {
   artist: string;
   imagePath: string;
 }
+
+export interface Playlist {
+  id: string;
+  name: string;
+}
+
+export interface CurrentUser {
+  id: string;
+  name: string;
+}

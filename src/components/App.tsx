@@ -1,6 +1,10 @@
 import { useEffect } from "react";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { startAuthentication } from "../services/auth";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  useNavigate,
+} from "react-router-dom";
+import { requestToken, startAuthentication } from "../services/auth";
 import { AlbumSearch } from "./AlbumSearch";
 import "./App.css";
 import { Authorized } from "./Authorized";
@@ -11,6 +15,21 @@ const Login = () => {
   useEffect(() => {
     startAuthentication();
   }, []);
+  return <></>;
+};
+
+const Callback = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get("code");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!code) {
+      return;
+    }
+    requestToken(code).then(() => navigate("/playlists"));
+  }, [code, navigate]);
+
   return <></>;
 };
 
@@ -35,11 +54,15 @@ const router = createBrowserRouter([
           </Authorized>
         ),
       },
-      {
-        path: "/login",
-        element: <Login />,
-      },
     ],
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/callback",
+    element: <Callback />,
   },
 ]);
 

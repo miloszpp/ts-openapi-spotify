@@ -1,7 +1,6 @@
-import React from "react";
 import { SPOTIFY_CLIENT_ID } from "../constants";
 
-const redirectUri = "http://localhost:5173";
+const redirectUri = "http://localhost:5173/callback";
 
 function generateRandomString(length: number) {
   let text = "";
@@ -36,7 +35,8 @@ export function startAuthentication() {
 
   return generateCodeChallenge(codeVerifier).then((codeChallenge) => {
     const state = generateRandomString(16);
-    const scope = "user-read-private user-read-email";
+    const scope =
+      "user-read-private user-read-email playlist-read-private playlist-modify-private";
 
     localStorage.setItem("code_verifier", codeVerifier);
 
@@ -91,5 +91,3 @@ export function requestToken(code: string) {
       throw error;
     });
 }
-
-export const TokenContext = React.createContext<string>("");

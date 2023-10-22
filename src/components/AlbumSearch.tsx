@@ -1,6 +1,5 @@
-import { createRef, useContext, useState } from "react";
+import { createRef, useState } from "react";
 import { getAlbum, searchAlbums } from "../services/api";
-import { TokenContext } from "../services/auth";
 import {
   convertAlbumDetails,
   convertAlbumSearchResponse,
@@ -14,8 +13,6 @@ import {
 } from "../utils/AsyncResult";
 
 export const AlbumSearch = () => {
-  const token = useContext(TokenContext);
-
   const queryInputRef = createRef<HTMLInputElement>();
 
   const [albums, setAlbums] = useState<AsyncResult<Album[]>>(ASYNC_EMPTY);
@@ -28,13 +25,13 @@ export const AlbumSearch = () => {
     }
 
     setAlbums(ASYNC_IN_PROGRESS);
-    const response = await searchAlbums(token, queryInputRef.current.value);
+    const response = await searchAlbums(queryInputRef.current.value);
     setAlbums(asAsyncSuccess(convertAlbumSearchResponse(response.data)));
   };
 
   const handleGetDetails = async (id: string) => {
     setAlbumDetails(ASYNC_IN_PROGRESS);
-    const response = await getAlbum(token, id);
+    const response = await getAlbum(id);
     setAlbumDetails(asAsyncSuccess(convertAlbumDetails(response.data)));
   };
 
