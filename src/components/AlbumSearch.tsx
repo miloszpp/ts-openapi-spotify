@@ -1,10 +1,8 @@
 import { createRef, useState } from "react";
-import { getAlbum, searchAlbums } from "../services/api";
-import {
-  convertAlbumDetails,
-  convertAlbumSearchResponse,
-} from "../services/conversion";
-import { Album, AlbumDetails } from "../types/domain";
+import { Link } from "react-router-dom";
+import { searchAlbums } from "../services/api";
+import { convertAlbumSearchResponse } from "../services/conversion";
+import { Album } from "../types/domain";
 import {
   ASYNC_EMPTY,
   ASYNC_IN_PROGRESS,
@@ -16,8 +14,6 @@ export const AlbumSearch = () => {
   const queryInputRef = createRef<HTMLInputElement>();
 
   const [albums, setAlbums] = useState<AsyncResult<Album[]>>(ASYNC_EMPTY);
-  const [albumDetails, setAlbumDetails] =
-    useState<AsyncResult<AlbumDetails>>(ASYNC_EMPTY);
 
   const handleSearch = async () => {
     if (!queryInputRef.current) {
@@ -29,45 +25,24 @@ export const AlbumSearch = () => {
     setAlbums(asAsyncSuccess(convertAlbumSearchResponse(response.data)));
   };
 
-  const handleGetDetails = async (id: string) => {
-    setAlbumDetails(ASYNC_IN_PROGRESS);
-    const response = await getAlbum(id);
-    setAlbumDetails(asAsyncSuccess(convertAlbumDetails(response.data)));
-  };
-
   return (
-    <div className="container">
-      <div className="master">
-        <input
-          type="text"
-          placeholder="search for album..."
-          ref={queryInputRef}
-        />
-        <button onClick={handleSearch}>Search</button>
-        {albums.type === "inProgress" && <span>Loading...</span>}
-        {albums.type === "success" && (
-          <ul>
-            {albums.value.map((album) => (
-              <li>
-                {album.name}{" "}
-                <button onClick={() => handleGetDetails(album.id)}>
-                  Details
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-      <div className="details">
-        {albumDetails.type === "inProgress" && <span>Loading...</span>}
-        {albumDetails.type === "success" && (
-          <div>
-            <h1>{albumDetails.value.name}</h1>
-            <h2>{albumDetails.value.artist}</h2>
-            <img src={albumDetails.value.imagePath} />
-          </div>
-        )}
-      </div>
-    </div>
+    <>
+      <input
+        type="text"
+        placeholder="search for album..."
+        ref={queryInputRef}
+      />
+      <button onClick={handleSearch}>Search</button>
+      {albums.type === "inProgress" && <span>Loading...</span>}
+      {albums.type === "success" && (
+        <ul>
+          {albums.value.map((album) => (
+            <li>
+              <Link to={`/albums/${album.id}`}>{album.name}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
   );
 };

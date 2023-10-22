@@ -8,8 +8,10 @@ import { requestToken, startAuthentication } from "../services/auth";
 import { AlbumSearch } from "./AlbumSearch";
 import "./App.css";
 import { Authorized } from "./Authorized";
+import { CreatePlaylist } from "./CreatePlaylist";
 import { Playlists } from "./Playlists";
 import { Root } from "./Root";
+import { SingleAlbum } from "./SingleAlbum";
 
 const Login = () => {
   useEffect(() => {
@@ -47,10 +49,26 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/albums/:id",
+        element: (
+          <Authorized>
+            <SingleAlbum />
+          </Authorized>
+        ),
+      },
+      {
         path: "/playlists",
         element: (
           <Authorized>
             <Playlists />
+          </Authorized>
+        ),
+      },
+      {
+        path: "/create-playlist",
+        element: (
+          <Authorized>
+            <CreatePlaylist />
           </Authorized>
         ),
       },
@@ -67,11 +85,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return (
-    <>
-      <RouterProvider router={router} />
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

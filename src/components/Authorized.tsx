@@ -29,7 +29,7 @@ export const Authorized: React.FC<PropsWithChildren> = ({ children }) => {
         setCurrentUser(asAsyncSuccess(convertCurrentUser(response.data)));
       },
       (error): void => {
-        if (isAxiosError(error) && error.status === 401) {
+        if (isAxiosError(error) && error.response?.status === 401) {
           navigate("/login");
         } else {
           setCurrentUser(asAsyncFailure(error));
