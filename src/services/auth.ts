@@ -1,6 +1,8 @@
 import { SPOTIFY_CLIENT_ID } from "../constants";
 
-const redirectUri = "http://localhost:5173/callback";
+import { isLocalhost } from "../utils/env";
+
+const getRedirectUri = () => isLocalhost() ? "http://localhost:5173/ts-openapi-spotify/callback" : 'https://miloszpp.github.io/ts-openapi-spotify/callback';
 
 function generateRandomString(length: number) {
   let text = "";
@@ -44,13 +46,13 @@ export function startAuthentication() {
       response_type: "code",
       client_id: SPOTIFY_CLIENT_ID,
       scope: scope,
-      redirect_uri: redirectUri,
+      redirect_uri: getRedirectUri(),
       state: state,
       code_challenge_method: "S256",
       code_challenge: codeChallenge,
     });
 
-    (window as any).location = "https://accounts.spotify.com/authorize?" + args;
+    window.location.assign("https://accounts.spotify.com/authorize?" + args);
   });
 }
 
@@ -64,7 +66,7 @@ export function requestToken(code: string) {
   const body = new URLSearchParams({
     grant_type: "authorization_code",
     code: code,
-    redirect_uri: redirectUri,
+    redirect_uri: getRedirectUri(),
     client_id: SPOTIFY_CLIENT_ID,
     code_verifier: codeVerifier,
   });

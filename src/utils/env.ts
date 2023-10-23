@@ -1,0 +1,1 @@
+export const isLocalhost = () => window.location.href.includes('localhost');
