@@ -33,3 +33,10 @@ export const asAsyncFailure = <TError>(
 export const ASYNC_IN_PROGRESS: AsyncInProgress = { type: "inProgress" };
 
 export const ASYNC_EMPTY: AsyncEmpty = { type: "empty" };
+
+export const fromOpenApiFetch = <TData, TError>(
+  response: { data: TData; error?: never } | { data?: never; error: TError }
+) =>
+  response.data !== undefined
+    ? asAsyncSuccess(response.data)
+    : asAsyncFailure(response.error);

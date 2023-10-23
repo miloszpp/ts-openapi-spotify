@@ -1,11 +1,6 @@
 import axios from "axios";
-import {
-  AlbumDetailsResponseDto,
-  AlbumSearchResponseDto,
-  CreatePlaylistRequestDto,
-  CurrentUserDto,
-  GetPlaylistsDto,
-} from "../types/dto";
+import createClient from "openapi-fetch";
+import { paths } from "../types/spotify";
 
 axios.defaults.baseURL = "https://api.spotify.com/v1";
 axios.interceptors.request.use(function (config) {
@@ -14,29 +9,51 @@ axios.interceptors.request.use(function (config) {
   return config;
 });
 
+const baseClient = createClient<paths>();
+
+const spotifyClient = new Proxy(baseClient, {
+  get(_, key: keyof typeof baseClient) {
+    const authToken = localStorage.getItem("access_token");
+    const newClient = createClient<paths>({
+      headers: { Authorization: `Bearer ${authToken}` },
+      baseUrl: "https://api.spotify.com/v1",
+    });
+    return newClient[key];
+  },
+});
+
+const promisify = <TData, TError>(
+  response: { data: TData; error?: never } | { data?: never; error: TError }
+) => {
+  if (response.data) {
+    return { data: response.data };
+  } else {
+    throw response.error;
+  }
+};
+
 export const searchAlbums = async (query: string) =>
-  await axios.get<AlbumSearchResponseDto>(`/search`, {
-    params: {
-      q: query,
-      type: "album",
-    },
-  });
+  spotifyClient
+    .GET("/search", {
+      params: { query: { q: query, type: ["album"] } },
+    })
+    .then(promisify);
 
 export const getAlbum = async (id: string) =>
-  await axios.get<AlbumDetailsResponseDto>(`/albums/${id}`);
+  spotifyClient
+    .GET(`/albums/{id}`, { params: { path: { id } } })
+    .then(promisify);
 
-export const getPlaylists = async () => {
-  return await axios.get<GetPlaylistsDto>(`/me/playlists`);
-};
+export const getPlaylists = async () =>
+  spotifyClient.GET("/me/playlists").then(promisify);
 
-export const createPlaylist = async (userId: string, name: string) => {
-  const playlist: CreatePlaylistRequestDto = {
-    name,
-    public: false,
-  };
-  return await axios.post(`/users/${userId}/playlists`, playlist);
-};
+export const createPlaylist = async (userId: string, name: string) =>
+  spotifyClient
+    .POST("/users/{user_id}/playlists", {
+      params: { path: { user_id: userId } },
+      body: { name, public: false },
+    })
+    .then(promisify);
 
-export const getCurrentUser = async () => {
-  return await axios.get<CurrentUserDto>(`/me`);
-};
+export const getCurrentUser = async () =>
+  spotifyClient.GET("/me").then(promisify);
