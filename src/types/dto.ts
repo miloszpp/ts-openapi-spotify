@@ -14,10 +14,6 @@ export type AlbumSearchResponseDtoShort = SuccessResponse<
 export type AlbumDetailsResponseDto =
   paths["/albums/{id}"]["get"]["responses"]["200"]["content"]["application/json"];
 
-export type SaveAlbumsRequestDto = OperationRequestBodyContent<
-  paths["/me/albums"]["put"]
->;
-
 export type CurrentUserResponseDto =
   paths["/me"]["get"]["responses"]["200"]["content"]["application/json"];
 
