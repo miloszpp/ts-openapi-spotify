@@ -7,6 +7,7 @@ import {
   ASYNC_EMPTY,
   ASYNC_IN_PROGRESS,
   AsyncResult,
+  asAsyncFailure,
   asAsyncSuccess,
 } from "../utils/AsyncResult";
 
@@ -20,10 +21,15 @@ export const SingleAlbum: React.FC = () => {
       return;
     }
 
-    setAlbumDetails(ASYNC_IN_PROGRESS);
-    getAlbum(id).then((response) => {
-      setAlbumDetails(asAsyncSuccess(convertAlbumDetails(response.data)));
-    });
+    (async () => {
+      setAlbumDetails(ASYNC_IN_PROGRESS);
+      try {
+        const response = await getAlbum(id);
+        setAlbumDetails(asAsyncSuccess(convertAlbumDetails(response.data)));
+      } catch (error) {
+        setAlbumDetails(asAsyncFailure(error));
+      }
+    })();
   }, [id]);
 
   return (
@@ -35,6 +41,9 @@ export const SingleAlbum: React.FC = () => {
           <h2>{albumDetails.value.artist}</h2>
           <img src={albumDetails.value.imagePath} />
         </div>
+      )}
+      {albumDetails.type === "failure" && (
+        <span>Error occurred when fetching album details</span>
       )}
     </>
   );

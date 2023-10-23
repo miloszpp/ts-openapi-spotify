@@ -38,11 +38,17 @@ export const Authorized: React.FC<PropsWithChildren> = ({ children }) => {
     );
   }, [navigate]);
 
-  return currentUser.type === "success" ? (
-    <CurrentUserContext.Provider value={currentUser.value}>
-      {children}
-    </CurrentUserContext.Provider>
-  ) : (
-    <span>Loading...</span>
+  return (
+    <>
+      {currentUser.type === "success" && (
+        <CurrentUserContext.Provider value={currentUser.value}>
+          {children}
+        </CurrentUserContext.Provider>
+      )}
+      {currentUser.type === "inProgress" && <span>Loading...</span>}
+      {currentUser.type === "failure" && (
+        <span>Error occurred when fetching current user</span>
+      )}
+    </>
   );
 };

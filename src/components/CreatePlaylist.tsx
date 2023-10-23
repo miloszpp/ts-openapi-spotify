@@ -7,30 +7,34 @@ export const CreatePlaylist: React.FC = () => {
   const currentUser = useContext(CurrentUserContext);
 
   return (
-    <form>
-      <p>
-        <label>Name</label>
-        <input
-          type="text"
-          value={playlistName}
-          onChange={(e) => setPlaylistName(e.target.value)}
-        ></input>
-      </p>
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          createPlaylist(currentUser.id, playlistName).then(
-            () => {
-              setPlaylistName("");
-            },
-            () => {
-              alert("Failed to create playlist");
-            }
-          );
-        }}
-      >
-        Create new playlist
-      </button>
-    </form>
+    <>
+      <h1>Create Playlist</h1>
+      <form>
+        <p>
+          <label>Name</label>
+          <input
+            type="text"
+            value={playlistName}
+            onChange={(e) => setPlaylistName(e.target.value)}
+          ></input>
+        </p>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            createPlaylist(currentUser.id, playlistName).then(
+              () => {
+                setPlaylistName("");
+                alert(`Playlist ${playlistName} created successfully`);
+              },
+              () => {
+                alert("Failed to create playlist");
+              }
+            );
+          }}
+        >
+          Create new playlist
+        </button>
+      </form>
+    </>
   );
 };
