@@ -1,16 +1,11 @@
-import axios from "axios";
 import createClient from "openapi-fetch";
 import { paths } from "../types/spotify";
 
-axios.defaults.baseURL = "https://api.spotify.com/v1";
-axios.interceptors.request.use(function (config) {
-  const token = localStorage.getItem("access_token");
-  config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
-
 const baseClient = createClient<paths>();
 
+/** 
+ * This way we can add authorization to all calls made by `spotifyClient`. 
+ * */
 const spotifyClient = new Proxy(baseClient, {
   get(_, key: keyof typeof baseClient) {
     const authToken = localStorage.getItem("access_token");
@@ -22,6 +17,10 @@ const spotifyClient = new Proxy(baseClient, {
   },
 });
 
+/** 
+ * `openapi-fetch` doesn't throw exceptions in case of errors. It returns a union type instead.
+ * We convert the error result back to exception so that the API is the same as with regular implementation.
+ * */
 const promisify = <TData, TError>(
   response: { data: TData; error?: never } | { data?: never; error: TError }
 ) => {
