@@ -1,8 +1,7 @@
 import { SPOTIFY_CLIENT_ID } from "../constants";
 
-import { isLocalhost } from "../utils/env";
 
-const getRedirectUri = () => isLocalhost() ? "http://localhost:5173/ts-openapi-spotify/callback" : 'https://miloszpp.github.io/ts-openapi-spotify/callback';
+const getRedirectUri = () => "http://localhost:5173/callback";
 
 function generateRandomString(length: number) {
   let text = "";

@@ -82,7 +82,7 @@ const router = createBrowserRouter([
     path: "/callback",
     element: <Callback />,
   },
-], {basename: '/ts-openapi-spotify'});
+]);
 
 function App() {
   return <RouterProvider router={router} />;
