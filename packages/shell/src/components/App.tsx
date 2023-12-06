@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { requestToken, startAuthentication } from "common";
 import "./App.css";
-import { Authorized } from "../../../common/src/components/Authorized";
+import { Authorized } from "common";
 import { Root } from "./Root";
 
 const AlbumSearch = React.lazy(() => import('@remotes/albums/AlbumSearch'))
@@ -86,7 +86,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <Suspense fallback={<span>Loadinggggg...</span>}><RouterProvider router={router} /></Suspense>;
+  return <Suspense fallback={<span>Loading...</span>}><RouterProvider router={router} /></Suspense>;
 }
 
 export default App;

@@ -18,7 +18,11 @@ export default defineConfig({
             fileName: 'common',
         },
         rollupOptions: {
-            external: ['react', 'react-dom'],
+            external: [
+                'react', 
+                'react-dom', 
+                'react-router-dom'
+            ],
             output: {
                 globals: {
                     react: 'React',
