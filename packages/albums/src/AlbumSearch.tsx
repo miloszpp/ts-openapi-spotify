@@ -1,15 +1,15 @@
 import { createRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { searchAlbums } from "../services/api";
-import { convertAlbumSearchResponse } from "../services/conversion";
-import { Album } from "../types/domain";
+import { searchAlbums } from "@modules/common";
+import { convertAlbumSearchResponse } from "@modules/common";
+import { Album } from "@modules/common";
 import {
   ASYNC_EMPTY,
   ASYNC_IN_PROGRESS,
   AsyncResult,
   asAsyncFailure,
   asAsyncSuccess,
-} from "../utils/AsyncResult";
+} from "@modules/common";
 
 export const AlbumSearch = () => {
   const queryInputRef = createRef<HTMLInputElement>();
@@ -59,3 +59,5 @@ export const AlbumSearch = () => {
     </>
   );
 };
+
+export default AlbumSearch;

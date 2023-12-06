@@ -1,17 +1,18 @@
-import { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import {
   RouterProvider,
   createBrowserRouter,
   useNavigate,
 } from "react-router-dom";
-import { requestToken, startAuthentication } from "../services/auth";
-import { AlbumSearch } from "./AlbumSearch";
+import { requestToken, startAuthentication } from "@modules/common";
 import "./App.css";
-import { Authorized } from "./Authorized";
-import { CreatePlaylist } from "./CreatePlaylist";
-import { Playlists } from "./Playlists";
+import { Authorized } from "../../../common/src/components/Authorized";
 import { Root } from "./Root";
-import { SingleAlbum } from "./SingleAlbum";
+
+const AlbumSearch = React.lazy(() => import('@modules/albums/AlbumSearch'))
+const SingleAlbum = React.lazy(() => import('@modules/albums/SingleAlbum'))
+const CreatePlaylist = React.lazy(() => import('@modules/playlists/CreatePlaylist'))
+const Playlists = React.lazy(() => import('@modules/playlists/Playlists'))
 
 const Login = () => {
   useEffect(() => {
@@ -85,7 +86,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return <Suspense fallback={<span>Loadinggggg...</span>}><RouterProvider router={router} /></Suspense>;
 }
 
 export default App;

@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getAlbum } from "../services/api";
-import { convertAlbumDetails } from "../services/conversion";
-import { AlbumDetails } from "../types/domain";
+import { getAlbum } from "@modules/common";
+import { convertAlbumDetails } from "@modules/common";
+import { AlbumDetails } from"@modules/common";
 import {
   ASYNC_EMPTY,
   ASYNC_IN_PROGRESS,
   AsyncResult,
   asAsyncFailure,
   asAsyncSuccess,
-} from "../utils/AsyncResult";
+} from "@modules/common";
 
 export const SingleAlbum: React.FC = () => {
   const { id } = useParams();
@@ -48,3 +48,5 @@ export const SingleAlbum: React.FC = () => {
     </>
   );
 };
+
+export default SingleAlbum;

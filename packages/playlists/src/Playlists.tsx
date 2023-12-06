@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { getPlaylists } from "../services/api";
-import { convertPlaylists } from "../services/conversion";
-import { Playlist } from "../types/domain";
+import { getPlaylists } from "@modules/common";
+import { convertPlaylists } from "@modules/common";
+import { Playlist } from "@modules/common";
 import {
   ASYNC_EMPTY,
   ASYNC_IN_PROGRESS,
   AsyncResult,
   asAsyncFailure,
   asAsyncSuccess,
-} from "../utils/AsyncResult";
+} from "@modules/common";
 
 export const Playlists: React.FC = () => {
   const [playlists, setPlaylists] =
@@ -43,3 +43,5 @@ export const Playlists: React.FC = () => {
     </>
   );
 };
+
+export default Playlists;
