@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
-import { createPlaylist } from "@modules/common";
-import { CurrentUserContext } from "@modules/common";
+import { createPlaylist } from "common";
+import { CurrentUserContext } from "common";
 
 export const CreatePlaylist: React.FC = () => {
   const [playlistName, setPlaylistName] = useState("");

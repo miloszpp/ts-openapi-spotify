@@ -19,10 +19,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-
-    "paths": {
-      "@modules/common": ["../common"]
-    }
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }

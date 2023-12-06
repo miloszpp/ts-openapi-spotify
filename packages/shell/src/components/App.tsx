@@ -4,15 +4,15 @@ import {
   createBrowserRouter,
   useNavigate,
 } from "react-router-dom";
-import { requestToken, startAuthentication } from "@modules/common";
+import { requestToken, startAuthentication } from "common";
 import "./App.css";
 import { Authorized } from "../../../common/src/components/Authorized";
 import { Root } from "./Root";
 
-const AlbumSearch = React.lazy(() => import('@modules/albums/AlbumSearch'))
-const SingleAlbum = React.lazy(() => import('@modules/albums/SingleAlbum'))
-const CreatePlaylist = React.lazy(() => import('@modules/playlists/CreatePlaylist'))
-const Playlists = React.lazy(() => import('@modules/playlists/Playlists'))
+const AlbumSearch = React.lazy(() => import('@remotes/albums/AlbumSearch'))
+const SingleAlbum = React.lazy(() => import('@remotes/albums/SingleAlbum'))
+const CreatePlaylist = React.lazy(() => import('@remotes/playlists/CreatePlaylist'))
+const Playlists = React.lazy(() => import('@remotes/playlists/Playlists'))
 
 const Login = () => {
   useEffect(() => {

@@ -1,15 +1,15 @@
 import { createRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { searchAlbums } from "@modules/common";
-import { convertAlbumSearchResponse } from "@modules/common";
-import { Album } from "@modules/common";
+import { searchAlbums } from "common";
+import { convertAlbumSearchResponse } from "common";
+import { Album } from "common";
 import {
   ASYNC_EMPTY,
   ASYNC_IN_PROGRESS,
   AsyncResult,
   asAsyncFailure,
   asAsyncSuccess,
-} from "@modules/common";
+} from "common";
 
 export const AlbumSearch = () => {
   const queryInputRef = createRef<HTMLInputElement>();

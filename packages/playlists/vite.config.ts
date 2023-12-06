@@ -29,7 +29,7 @@ export default defineConfig({
         "react-dom": {
           requiredVersion: dependencies["react-dom"],
         },
-        "@modules/common": {
+        "common": {
           packagePath: path.resolve("../common"),
           requiredVersion: false,
         },

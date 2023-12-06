@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getAlbum } from "@modules/common";
-import { convertAlbumDetails } from "@modules/common";
-import { AlbumDetails } from"@modules/common";
+import { getAlbum } from "common";
+import { convertAlbumDetails } from "common";
+import { AlbumDetails } from "common";
 import {
   ASYNC_EMPTY,
   ASYNC_IN_PROGRESS,
   AsyncResult,
   asAsyncFailure,
   asAsyncSuccess,
-} from "@modules/common";
+} from "common";
 
 export const SingleAlbum: React.FC = () => {
   const { id } = useParams();

@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { getPlaylists } from "@modules/common";
-import { convertPlaylists } from "@modules/common";
-import { Playlist } from "@modules/common";
+import { getPlaylists } from "common";
+import { convertPlaylists } from "common";
+import { Playlist } from "common";
 import {
   ASYNC_EMPTY,
   ASYNC_IN_PROGRESS,
   AsyncResult,
   asAsyncFailure,
   asAsyncSuccess,
-} from "@modules/common";
+} from "common";
 
 export const Playlists: React.FC = () => {
   const [playlists, setPlaylists] =

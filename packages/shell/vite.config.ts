@@ -20,8 +20,8 @@ export default defineConfig({
       name: "shell",
       filename: "remoteEntry.js",
       remotes: {
-        "@modules/playlists": "http://localhost:4001/assets/remoteEntry.js",
-        "@modules/albums": "http://localhost:4002/assets/remoteEntry.js",
+        "@remotes/playlists": "http://localhost:4001/assets/remoteEntry.js",
+        "@remotes/albums": "http://localhost:4002/assets/remoteEntry.js",
       },      
       shared: { 
         ...dependencies,
@@ -32,7 +32,7 @@ export default defineConfig({
         'react-dom': {
           requiredVersion: dependencies['react-dom']
         },
-        "@modules/common": {
+        "common": {
           packagePath: path.resolve('../common'),
           requiredVersion: false
         }
