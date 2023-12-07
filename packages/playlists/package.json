@@ -13,7 +13,7 @@
     "preview": "vite preview --port 4001 --strictPort"
   },
   "dependencies": {
-    "common": "^1.0.0",
+    "common": "*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.17.0"
