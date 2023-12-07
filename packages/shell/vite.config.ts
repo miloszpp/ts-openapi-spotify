@@ -1,9 +1,13 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import federation from "@originjs/vite-plugin-federation";
-import path from "path";
+import path, { join } from "path";
+import { fileURLToPath } from "url";
 
-import {dependencies} from './package.json';
+import { dependencies } from "./package.json";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,7 +15,7 @@ export default defineConfig({
     target: "esnext",
     minify: false,
     modulePreload: false,
-    cssCodeSplit: false
+    cssCodeSplit: false,
   },
   plugins: [
     react(),
@@ -22,21 +26,30 @@ export default defineConfig({
       remotes: {
         "@remotes/playlists": "http://localhost:4001/assets/remoteEntry.js",
         "@remotes/albums": "http://localhost:4002/assets/remoteEntry.js",
-      },      
-      shared: { 
+      },
+      shared: {
         ...dependencies,
-        'react': {
-          requiredVersion: dependencies['react'] 
-                   
+        react: {
+          requiredVersion: dependencies["react"],
         },
-        'react-dom': {
-          requiredVersion: dependencies['react-dom']
+        "react-dom": {
+          requiredVersion: dependencies["react-dom"],
         },
-        "common": {
-          packagePath: path.resolve('../common'),
-          requiredVersion: false
-        }
-      }
+        common: {
+          packagePath: path.resolve("../common"),
+          requiredVersion: false,
+        },
+        "react/jsx-runtime": {
+          packagePath: join(
+            __dirname,
+            '..',
+            '..',
+            "node_modules",
+            "react",
+            "jsx-runtime.js"
+          ),
+        },
+      },
     }),
   ],
 });
